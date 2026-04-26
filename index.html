@@ -246,52 +246,50 @@
     }
 
     // Генерация вопроса для режима ПАРЫ (с учётом всех возможных ответов)
-    function generatePairQuestion() {
-        const allWords = new Set();
-        paronymPairsList.forEach(pair => {
-            allWords.add(pair.word1);
-            allWords.add(pair.word2);
-        });
-        const wordsArray = Array.from(allWords);
-        const randomWord = wordsArray[Math.floor(Math.random() * wordsArray.length)];
-        
-        const possibleAnswers = new Set();
-        paronymPairsList.forEach(pair => {
-            if (pair.word1 === randomWord) possibleAnswers.add(pair.word2);
-            if (pair.word2 === randomWord) possibleAnswers.add(pair.word1);
-        });
-        
-        const correctList = Array.from(possibleAnswers);
-        if (correctList.length === 0) return generatePairQuestion(); // fallback
-        
-        currentPairObj = {
-            prompt: randomWord,
-            correctAnswers: correctList
-        };
-        currentCorrectAnswersList = correctList;
-        currentAnswered = false;
-        return { promptWord: randomWord, correctList };
-    }
+   // Генерация вопроса: всегда берём слово, у которого есть хотя бы один пароним (word1)
+function generatePairQuestion() {
+    // Фильтруем только те пары, где word1 не пустое (все пары у нас симметричны, но мы будем показывать только word1)
+    // Чтобы вопросы были разнообразными, можно брать случайную пару и показывать её левую часть.
+    const randomPair = paronymPairsList[Math.floor(Math.random() * paronymPairsList.length)];
+    const promptWord = randomPair.word1;
+    // Собираем все возможные ответы для этого слова из всех пар
+    const possibleAnswers = new Set();
+    paronymPairsList.forEach(pair => {
+        if (pair.word1 === promptWord) possibleAnswers.add(pair.word2);
+        // Если случайно слово встретилось как word2, тоже добавим (на случай несимметричных пар)
+        if (pair.word2 === promptWord) possibleAnswers.add(pair.word1);
+    });
+    const correctList = Array.from(possibleAnswers);
+    if (correctList.length === 0) return generatePairQuestion(); // fallback
+    
+    currentPairObj = {
+        prompt: promptWord,
+        correctAnswers: correctList
+    };
+    currentCorrectAnswersList = correctList;
+    currentAnswered = false;
+    return { promptWord, correctList };
+}
 
-    function checkPairAnswer(userAnswer) {
-        if (!userAnswer) { showFeedback("Введите ответ!", "wrong"); return; }
-        const normalize = s => s.trim().toLowerCase().replace(/[.,!?;:()]/g, '');
-        const normalizedUser = normalize(userAnswer);
-        const isCorrect = currentPairObj.correctAnswers.some(correct => normalize(correct) === normalizedUser);
-        
-        if (isCorrect) {
-            if (!currentAnswered) {
-                currentScore++;
-                updateScoreUI();
-                currentAnswered = true;
-                showFeedback(`✅ Верно! +1 балл. (Подходят: ${currentPairObj.correctAnswers.join(", ")})`, "correct");
-            } else {
-                showFeedback(`🎉 Уже верно! Балл получен.`, "correct");
-            }
+function checkPairAnswer(userAnswer) {
+    if (!userAnswer) { showFeedback("Введите ответ!", "wrong"); return; }
+    const normalize = s => s.trim().toLowerCase().replace(/[.,!?;:()]/g, '');
+    const normalizedUser = normalize(userAnswer);
+    const isCorrect = currentPairObj.correctAnswers.some(correct => normalize(correct) === normalizedUser);
+    
+    if (isCorrect) {
+        if (!currentAnswered) {
+            currentScore++;
+            updateScoreUI();
+            currentAnswered = true;
+            showFeedback(`✅ Верно! +1 балл. (Подходят: ${currentPairObj.correctAnswers.join(", ")})`, "correct");
         } else {
-            showFeedback(`❌ Неправильно. Правильные варианты: ${currentPairObj.correctAnswers.join(", ")}.`, "wrong");
+            showFeedback(`🎉 Уже верно! Балл получен.`, "correct");
         }
+    } else {
+        showFeedback(`❌ Неправильно. Правильные варианты: ${currentPairObj.correctAnswers.join(", ")}.`, "wrong");
     }
+}
 
     function renderPairsMode() {
         const { promptWord, correctList } = generatePairQuestion();
