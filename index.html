@@ -252,8 +252,23 @@
         { word1: "эстетический", word2: "эстетичный" }, { word1: "этический", word2: "этичный" }, { word1: "эффективный", word2: "эффектный" }, { word1: "эффективность", word2: "эффектность" }, { word1: "яблочный", word2: "яблоневый" }
     ];
 
+    // Построим карту "слово -> массив всех паронимов"
+    const paronymMap = new Map();
+    for (const pair of paronymPairsList) {
+        // Добавляем для word1 -> word2
+        if (!paronymMap.has(pair.word1)) paronymMap.set(pair.word1, []);
+        if (!paronymMap.get(pair.word1).includes(pair.word2))
+            paronymMap.get(pair.word1).push(pair.word2);
+        // Добавляем для word2 -> word1
+        if (!paronymMap.has(pair.word2)) paronymMap.set(pair.word2, []);
+        if (!paronymMap.get(pair.word2).includes(pair.word1))
+            paronymMap.get(pair.word2).push(pair.word1);
+    }
+    // Массив всех возможных слов (вопросов)
+    const allWords = Array.from(paronymMap.keys());
+
     // --------------------------------------------------------------
-    // 2. ПОЛНАЯ БАЗА ПРЕДЛОЖЕНИЙ (все ошибки из присланного файла + ответы)
+    // 2. ПОЛНАЯ БАЗА ПРЕДЛОЖЕНИЙ (без изменений)
     // --------------------------------------------------------------
 const sentencesDB = [
     // ========== ПРЕДЫДУЩАЯ БАЗА (из основного списка ФИПИ) ==========
@@ -350,14 +365,13 @@ const sentencesDB = [
 ].filter(item => item.correct !== item.hintWord);
 
     // --------------------------------------------------------------
-    // Логика работы (режимы, счёт, словарь) – полностью рабочая
+    // Логика работы (исправленная для поддержки нескольких ответов)
     // --------------------------------------------------------------
     let currentMode = "pairs";
-    let currentQuestion = null;
     let currentScore = 0;
     let currentAnswered = false;
-    let currentCorrectAnswer = "";
-    let currentPairObj = null;
+    let currentCorrectAnswers = [];   // массив возможных правильных ответов для текущего вопроса
+    let currentPromptWord = "";
     let difficultWords = JSON.parse(localStorage.getItem("difficultParonyms")) || [];
 
     const dynamicDiv = document.getElementById("dynamicContent");
@@ -373,7 +387,7 @@ const sentencesDB = [
     function renderDifficultList() {
         difficultContainer.innerHTML = "";
         if (difficultWords.length === 0) {
-            difficultContainer.innerHTML = "<span class='badge'>📭 Нет добавленных слов. Ошиблись в режиме 1? Нажмите «➕ в словарь»</span>";
+            difficultContainer.innerHTML = "<span class='badge'>📭 Нет добавленных слов. Ошиблись? Нажмите «➕ в словарь»</span>";
             return;
         }
         difficultWords.forEach((word, idx) => {
@@ -396,19 +410,39 @@ const sentencesDB = [
         const fb = document.getElementById("dynamicFeedback");
         if (fb) { fb.className = `feedback ${type}`; fb.innerHTML = msg; }
     }
+
+    // Генерация вопроса: выбираем случайное слово и все его паронимы
     function generatePairQuestion() {
-        const randomPair = paronymPairsList[Math.floor(Math.random() * paronymPairsList.length)];
-        const side = Math.random() < 0.5 ? "left" : "right";
-        let promptWord, correctPartner;
-        if (side === "left") { promptWord = randomPair.word1; correctPartner = randomPair.word2; }
-        else { promptWord = randomPair.word2; correctPartner = randomPair.word1; }
-        currentPairObj = { prompt: promptWord, correct: correctPartner };
-        currentCorrectAnswer = correctPartner;
+        const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
+        const variants = paronymMap.get(randomWord) || [];
+        if (variants.length === 0) return generatePairQuestion(); // на всякий случай
+        currentPromptWord = randomWord;
+        currentCorrectAnswers = variants;
         currentAnswered = false;
-        return { promptWord, correctPartner };
+        return { promptWord: randomWord, correctAnswers: variants };
     }
+
+    function checkPairAnswer(userAnswer) {
+        if (!userAnswer) { showFeedback("Введите ответ!", "wrong"); return; }
+        const normalize = s => s.trim().toLowerCase().replace(/[.,!?;:()]/g, '');
+        const normalizedUser = normalize(userAnswer);
+        const isCorrect = currentCorrectAnswers.some(correct => normalize(correct) === normalizedUser);
+        if (isCorrect) {
+            if (!currentAnswered) {
+                currentScore++;
+                updateScoreUI();
+                currentAnswered = true;
+                showFeedback(`✅ Верно! +1 балл. (Подходят: ${currentCorrectAnswers.join(", ")})`, "correct");
+            } else {
+                showFeedback(`🎉 Уже верно! Балл получен.`, "correct");
+            }
+        } else {
+            showFeedback(`❌ Неправильно. Правильные варианты: ${currentCorrectAnswers.join(", ")}.`, "wrong");
+        }
+    }
+
     function renderPairsMode() {
-        const { promptWord, correctPartner } = generatePairQuestion();
+        const { promptWord, correctAnswers } = generatePairQuestion();
         const html = `
             <div class="question-area">
                 <div class="word-prompt">❓ ${promptWord}</div>
@@ -424,18 +458,15 @@ const sentencesDB = [
         dynamicDiv.innerHTML = html;
         document.getElementById("checkBtn").onclick = () => {
             const ans = document.getElementById("answerInput").value.trim();
-            const norm = s => s.toLowerCase().replace(/[.,!?;:()]/g, '');
-            if (norm(ans) === norm(currentCorrectAnswer)) {
-                if (!currentAnswered) { currentScore++; updateScoreUI(); currentAnswered=true; showFeedback(`✅ Верно! +1 балл.`, "correct"); }
-                else showFeedback(`🎉 Уже верно!`, "correct");
-            } else showFeedback(`❌ Неправильно. Правильный ответ: «${currentCorrectAnswer}».`, "wrong");
+            checkPairAnswer(ans);
         };
         document.getElementById("nextBtn").onclick = () => renderPairsMode();
-        document.getElementById("difficultWordBtn").onclick = () => addToDifficult(currentPairObj.prompt);
+        document.getElementById("difficultWordBtn").onclick = () => addToDifficult(currentPromptWord);
     }
+
     function renderSentencesMode() {
         const randomSent = sentencesDB[Math.floor(Math.random() * sentencesDB.length)];
-        currentCorrectAnswer = randomSent.correct;
+        currentCorrectAnswers = [randomSent.correct];
         currentAnswered = false;
         let displayText = randomSent.text;
         const wrongWord = randomSent.hintWord;
@@ -457,13 +488,18 @@ const sentencesDB = [
         document.getElementById("checkSentBtn").onclick = () => {
             const ans = document.getElementById("sentenceAnswer").value.trim();
             const norm = s => s.toLowerCase().replace(/[.,!?;:()]/g, '');
-            if (norm(ans) === norm(currentCorrectAnswer)) {
-                if (!currentAnswered) { currentScore++; updateScoreUI(); currentAnswered=true; showFeedback(`✅ Абсолютно верно! +1 балл.`, "correct"); }
-                else showFeedback(`Уже засчитано.`, "correct");
-            } else showFeedback(`❌ Ошибка! Правильный ответ: «${currentCorrectAnswer}».`, "wrong");
+            if (norm(ans) === norm(randomSent.correct)) {
+                if (!currentAnswered) {
+                    currentScore++;
+                    updateScoreUI();
+                    currentAnswered = true;
+                    showFeedback(`✅ Абсолютно верно! +1 балл.`, "correct");
+                } else showFeedback(`Уже засчитано.`, "correct");
+            } else showFeedback(`❌ Ошибка! Правильный ответ: «${randomSent.correct}».`, "wrong");
         };
         document.getElementById("nextSentBtn").onclick = () => renderSentencesMode();
     }
+
     function setMode(mode) {
         currentMode = mode;
         document.querySelectorAll(".mode-btn").forEach(btn => {
@@ -473,6 +509,7 @@ const sentencesDB = [
         if (mode === "pairs") renderPairsMode();
         else renderSentencesMode();
     }
+
     resetScoreBtn.onclick = () => { currentScore = 0; updateScoreUI(); showFeedback("Счёт обнулён", "neutral"); };
     clearDifficultBtn.onclick = () => { difficultWords = []; saveDifficult(); showFeedback("Словарь очищен", "neutral"); };
     document.querySelectorAll(".mode-btn").forEach(btn => btn.onclick = () => setMode(btn.dataset.mode));
