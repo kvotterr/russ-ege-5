@@ -3,186 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Тренажёр паронимов ЕГЭ | Полная база</title>
+    <title>Тренажёр паронимов ЕГЭ | Полная база + многовариантность</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
-        }
-        body {
-            background: linear-gradient(135deg, #f0f4fa 0%, #d9e2ef 100%);
-            min-height: 100vh;
-            padding: 20px 12px;
-        }
-        .app-container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        .mode-tabs {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .mode-btn {
-            background: #eef2f8;
-            border: none;
-            padding: 10px 24px;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 60px;
-            cursor: pointer;
-            transition: 0.2s;
-            color: #1e3a5f;
-        }
-        .mode-btn.active {
-            background: #1e4a76;
-            color: white;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif; }
+        body { background: linear-gradient(135deg, #f0f4fa 0%, #d9e2ef 100%); min-height: 100vh; padding: 20px 12px; }
+        .app-container { max-width: 1000px; margin: 0 auto; }
+        .mode-tabs { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
+        .mode-btn { background: #eef2f8; border: none; padding: 10px 24px; font-size: 1rem; font-weight: 600; border-radius: 60px; cursor: pointer; transition: 0.2s; color: #1e3a5f; }
+        .mode-btn.active { background: #1e4a76; color: white; }
         .mode-btn:first-child.active { background: #2b5a3b; }
         .mode-btn:last-child.active { background: #9b2f5f; }
-        .card {
-            background: rgba(255, 255, 255, 0.96);
-            border-radius: 2rem;
-            padding: 1.2rem 1.5rem;
-            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.2);
-        }
-        .stats-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f8fafd;
-            padding: 10px 18px;
-            border-radius: 60px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .score {
-            background: #2c5282;
-            color: white;
-            padding: 5px 18px;
-            border-radius: 40px;
-            font-weight: 600;
-        }
-        .reset-score {
-            background: #e2e8f0;
-            border: none;
-            padding: 5px 16px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-        .question-area {
-            margin: 16px 0;
-        }
-        .word-prompt {
-            font-size: 1.6rem;
-            font-weight: 700;
-            text-align: center;
-            background: #eef2ff;
-            padding: 20px;
-            border-radius: 2rem;
-            margin-bottom: 20px;
-            word-break: break-word;
-        }
-        .sentence {
-            font-size: 1.1rem;
-            line-height: 1.45;
-            background: #fefcf5;
-            padding: 18px;
-            border-radius: 1.5rem;
-            border-left: 6px solid #2c5282;
-            margin-bottom: 20px;
-        }
-        .sentence strong {
-            background: #ffe0b5;
-            padding: 0 4px;
-            border-radius: 12px;
-            color: #b1510a;
-        }
-        .input-field {
-            width: 100%;
-            padding: 14px 20px;
-            font-size: 1rem;
-            border: 2px solid #cbd5e1;
-            border-radius: 60px;
-            outline: none;
-            margin-bottom: 16px;
-        }
-        .input-field:focus {
-            border-color: #2c5282;
-            box-shadow: 0 0 0 3px rgba(44,82,130,0.2);
-        }
-        .button-group {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin: 16px 0 12px;
-        }
-        button {
-            border: none;
-            padding: 10px 22px;
-            border-radius: 60px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.15s;
-            font-size: 0.9rem;
-        }
-        .btn-check {
-            background: #2c5282;
-            color: white;
-        }
-        .btn-next {
-            background: #e9edf2;
-            color: #1f3a5f;
-        }
-        .btn-difficult {
-            background: #f3e8d2;
-            color: #8b5a2b;
-        }
-        .feedback {
-            padding: 12px 16px;
-            border-radius: 28px;
-            margin-top: 16px;
-            background: #f1f5f9;
-            border-left: 5px solid #94a3b8;
-        }
-        .feedback.correct {
-            background: #e0f2e7;
-            border-left-color: #2b7e3a;
-            color: #14532d;
-        }
-        .feedback.wrong {
-            background: #ffe9e9;
-            border-left-color: #c53030;
-            color: #9b2c2c;
-        }
-        .difficult-list-panel {
-            margin-top: 28px;
-            background: #f4f7fb;
-            border-radius: 1.5rem;
-            padding: 12px 16px;
-        }
-        .badge {
-            background: #f0e1c0;
-            padding: 4px 12px;
-            border-radius: 30px;
-            display: inline-block;
-            margin: 4px;
-            cursor: pointer;
-            font-size: 0.85rem;
-        }
-        @media (max-width: 550px) {
-            .word-prompt { font-size: 1.3rem; }
-            .sentence { font-size: 0.95rem; }
-            .card { padding: 1rem; }
-            button { padding: 8px 16px; }
-        }
+        .card { background: rgba(255, 255, 255, 0.96); border-radius: 2rem; padding: 1.2rem 1.5rem; box-shadow: 0 20px 35px -12px rgba(0,0,0,0.2); }
+        .stats-bar { display: flex; justify-content: space-between; align-items: center; background: #f8fafd; padding: 10px 18px; border-radius: 60px; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .score { background: #2c5282; color: white; padding: 5px 18px; border-radius: 40px; font-weight: 600; }
+        .reset-score { background: #e2e8f0; border: none; padding: 5px 16px; border-radius: 40px; cursor: pointer; font-weight: 500; }
+        .question-area { margin: 16px 0; }
+        .word-prompt { font-size: 1.6rem; font-weight: 700; text-align: center; background: #eef2ff; padding: 20px; border-radius: 2rem; margin-bottom: 20px; word-break: break-word; }
+        .sentence { font-size: 1.1rem; line-height: 1.45; background: #fefcf5; padding: 18px; border-radius: 1.5rem; border-left: 6px solid #2c5282; margin-bottom: 20px; }
+        .sentence strong { background: #ffe0b5; padding: 0 4px; border-radius: 12px; color: #b1510a; }
+        .input-field { width: 100%; padding: 14px 20px; font-size: 1rem; border: 2px solid #cbd5e1; border-radius: 60px; outline: none; margin-bottom: 16px; }
+        .input-field:focus { border-color: #2c5282; box-shadow: 0 0 0 3px rgba(44,82,130,0.2); }
+        .button-group { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin: 16px 0 12px; }
+        button { border: none; padding: 10px 22px; border-radius: 60px; font-weight: 600; cursor: pointer; transition: 0.15s; font-size: 0.9rem; }
+        .btn-check { background: #2c5282; color: white; }
+        .btn-next { background: #e9edf2; color: #1f3a5f; }
+        .btn-difficult { background: #f3e8d2; color: #8b5a2b; }
+        .feedback { padding: 12px 16px; border-radius: 28px; margin-top: 16px; background: #f1f5f9; border-left: 5px solid #94a3b8; }
+        .feedback.correct { background: #e0f2e7; border-left-color: #2b7e3a; color: #14532d; }
+        .feedback.wrong { background: #ffe9e9; border-left-color: #c53030; color: #9b2c2c; }
+        .difficult-list-panel { margin-top: 28px; background: #f4f7fb; border-radius: 1.5rem; padding: 12px 16px; }
+        .badge { background: #f0e1c0; padding: 4px 12px; border-radius: 30px; display: inline-block; margin: 4px; cursor: pointer; font-size: 0.85rem; }
+        @media (max-width: 550px) { .word-prompt { font-size: 1.3rem; } .sentence { font-size: 0.95rem; } .card { padding: 1rem; } button { padding: 8px 16px; } }
     </style>
 </head>
 <body>
@@ -209,7 +60,7 @@
 
 <script>
     // --------------------------------------------------------------
-    // 1. ВСЕ ПАРЫ ПАРОНИМОВ (из вашего полного списка) – 500+ пар
+    // 1. ВСЕ ПАРЫ ПАРОНИМОВ (из вашего полного списка)
     // --------------------------------------------------------------
     const paronymPairsList = [
         { word1: "абонемент", word2: "абонент" }, { word1: "авторитарный", word2: "авторитетный" }, { word1: "адресант", word2: "адресат" },
@@ -253,110 +104,107 @@
     ];
 
     // --------------------------------------------------------------
-    // 2. ПОЛНАЯ БАЗА ПРЕДЛОЖЕНИЙ (все ошибки из присланного файла + ответы)
+    // 2. ПОЛНАЯ БАЗА ПРЕДЛОЖЕНИЙ (из ФИПИ + доп. тренировка)
     // --------------------------------------------------------------
-const sentencesDB = [
-    // ========== ПРЕДЫДУЩАЯ БАЗА (из основного списка ФИПИ) ==========
-    { text: "Королёв оказался блистательным, очень АРТИСТИЧЕСКИМ рассказчиком.", correct: "АРТИСТИЧНЫМ", hintWord: "АРТИСТИЧЕСКИМ" },
-    { text: "По АВТОРИТАРНОМУ мнению Д. Карнеги, улыбка «создаёт счастье в доме»", correct: "АВТОРИТЕТНОМУ", hintWord: "АВТОРИТАРНОМУ" },
-    { text: "С равнины тянуло миндальным запахом БОЛОТИСТЫХ цветов.", correct: "БОЛОТНЫХ", hintWord: "БОЛОТИСТЫХ" },
-    { text: "Это люди БЕЗОТВЕТНЫЕ: они не привыкли отвечать за свои поступки.", correct: "БЕЗОТВЕТСТВЕННЫЕ", hintWord: "БЕЗОТВЕТНЫЕ" },
-    { text: "Кое-где по опушкам БОЛОТНЫЙ запах был очень силён.", correct: "БОЛОТИСТЫЙ", hintWord: "БОЛОТНЫЙ" },
-    { text: "Родители рядового Сидорова получили из воинской части БЛАГОДАРНОЕ письмо.", correct: "БЛАГОДАРСТВЕННОЕ", hintWord: "БЛАГОДАРНОЕ" },
-    { text: "Трудно переоценить БЛАГОТВОРИТЕЛЬНОЕ влияние природы на здоровье", correct: "БЛАГОТВОРНОЕ", hintWord: "БЛАГОТВОРИТЕЛЬНОЕ" },
-    { text: "Кафедральный собор обретает сегодня БЫВАЛОЕ великолепие", correct: "БЫЛОЕ", hintWord: "БЫВАЛОЕ" },
-    { text: "ВЕЛИКИЕ и прекрасные пеликаны медленно взмахивали крыльями", correct: "ВЕЛИЧЕСТВЕННЫЕ", hintWord: "ВЕЛИКИЕ" },
-    { text: "ВЕЧНАЯ пыль покрывала всю мебель", correct: "ВЕКОВАЯ", hintWord: "ВЕЧНАЯ" },
-    { text: "В комнату вошла красивая женщина с ВЕЛИКОЙ осанкой.", correct: "ВЕЛИЧЕСТВЕННОЙ", hintWord: "ВЕЛИКОЙ" },
-    { text: "Густые заросли кустарника чередовались с ВЕЧНЫМИ соснами.", correct: "ВЕКОВЫМИ", hintWord: "ВЕЧНЫМИ" },
-    { text: "На этом небольшом предприятии коллектив ЗАПОЛНИЛСЯ новыми кадрами.", correct: "ПОПОЛНИЛСЯ", hintWord: "ЗАПОЛНИЛСЯ" },
-    { text: "Правильное понимание трендов позволит получить финансовую ВЫГОДНОСТЬ", correct: "ВЫГОДУ", hintWord: "ВЫГОДНОСТЬ" },
-    { text: "Самым ВЫСОТНЫМ игроком чемпионата признан игрок российской команды.", correct: "ВЫСОКИМ", hintWord: "ВЫСОТНЫМ" },
-    { text: "Стремление компании ВЫРАСТИТЬ объёмы производства требует внимания", correct: "НАРАСТИТЬ", hintWord: "ВЫРАСТИТЬ" },
-    { text: "Оба берега реки были высоки и обрывисты, можно было видеть ГЛИНЯНОЙ почвы.", correct: "ГЛИНИСТОЙ", hintWord: "ГЛИНЯНОЙ" },
-    { text: "В представлении Татьяны каждый ГОДОВОЙ ребёнок был уже сознательным.", correct: "ГОДОВАЛЫЙ", hintWord: "ГОДОВОЙ" },
-    { text: "Положительный настрой, ГАРАНТИЙНАЯ ситуация успеха пробуждает добрые чувства.", correct: "ГАРАНТИРОВАННАЯ", hintWord: "ГАРАНТИЙНАЯ" },
-    { text: "В музее портреты учёных, являющих собой ГОРДЫНЮ мировой науки.", correct: "ГОРДОСТЬ", hintWord: "ГОРДЫНЮ" },
-    { text: "Между странами установились доверительные и ДРУЖЕСКИЕ отношения.", correct: "ДРУЖЕСТВЕННЫЕ", hintWord: "ДРУЖЕСКИЕ" },
-    { text: "На тёмной листве блестели ДОЖДЛИВЫЕ капли.", correct: "ДОЖДЕВЫЕ", hintWord: "ДОЖДЛИВЫЕ" },
-    { text: "Шоколад приносит ДВОЙСТВЕННУЮ пользу.", correct: "ДВОЙНУЮ", hintWord: "ДВОЙСТВЕННУЮ" },
-    { text: "Она не услышала ЖЕЛАТЕЛЬНЫХ слов от друга.", correct: "ЖЕЛАННЫХ", hintWord: "ЖЕЛАТЕЛЬНЫХ" },
-    { text: "На всю жизнь я запомнил ЖЕСТОКОЕ правило машиниста.", correct: "ЖЁСТКОЕ", hintWord: "ЖЕСТОКОЕ" },
-    { text: "Директор ЗВУКОВЫМ голосом объявил победителей.", correct: "ЗВУЧНЫМ", hintWord: "ЗВУКОВЫМ" },
-    { text: "Иван Парфеньевич Бородин – ЗАЧИНЩИК российского природоохранного движения.", correct: "ЗАЧИНАТЕЛЬ", hintWord: "ЗАЧИНЩИК" },
-    { text: "Участие известного спортсмена вызвало значительный ЗРИТЕЛЬНЫЙ интерес.", correct: "ЗРИТЕЛЬСКИЙ", hintWord: "ЗРИТЕЛЬНЫЙ" },
-    { text: "Трудно было сказать: природная речка или ИСКУСНЫЙ канал.", correct: "ИСКУССТВЕННЫЙ", hintWord: "ИСКУСНЫЙ" },
-    { text: "Цель программы – расширить возможности ИЗОБРЕТАТЕЛЬНОЙ деятельности.", correct: "ИЗОБРЕТАТЕЛЬСКОЙ", hintWord: "ИЗОБРЕТАТЕЛЬНОЙ" },
-    { text: "Глава города отметил их ИСПОЛНИТЕЛЬНОЕ мастерство.", correct: "ИСПОЛНИТЕЛЬСКОЕ", hintWord: "ИСПОЛНИТЕЛЬНОЕ" },
-    { text: "Участники парада заняли ИСХОДЯЩИЕ позиции.", correct: "ИСХОДНЫЕ", hintWord: "ИСХОДЯЩИЕ" },
-    { text: "А внизу раздаётся мерный топот КОННЫХ копыт.", correct: "КОНСКИХ", hintWord: "КОННЫХ" },
-    { text: "Без меди клетки не могут образовывать КРАСОЧНОЕ вещество – меланин.", correct: "КРАСЯЩЕЕ", hintWord: "КРАСОЧНОЕ" },
-    { text: "Вокруг расстилалась КАМЕННАЯ пустыня.", correct: "КАМЕНИСТАЯ", hintWord: "КАМЕННАЯ" },
-    { text: "Современные МОРОЗНЫЕ камеры позволяют замораживать продукты.", correct: "МОРОЗИЛЬНЫЕ", hintWord: "МОРОЗНЫЕ" },
-    { text: "Перед тем как ОДЕТЬ линзу, убедитесь в чистоте.", correct: "НАДЕТЬ", hintWord: "ОДЕТЬ" },
-    { text: "В основе народных бунтов лежит несправедливость, которая становится НЕТЕРПИМОЙ болью.", correct: "НЕСТЕРПИМОЙ", hintWord: "НЕТЕРПИМОЙ" },
-    { text: "Мой одноклассник ОДЕЛ костюм Деда Мороза.", correct: "НАДЕЛ", hintWord: "ОДЕЛ" },
-    { text: "Из ОБВИНИТЕЛЬНОГО акта было ясно...", correct: "ОБВИНИТЕЛЬНОГО", hintWord: "ОБВИНИТЕЛЬНОГО" },
-    { text: "ПАМЯТЛИВЫЕ места нашего города привлекают туристов.", correct: "ПАМЯТНЫЕ", hintWord: "ПАМЯТЛИВЫЕ" },
-    { text: "ПОЧТИТЕЛЬНЫЙ возраст в сочетании с сединой подчёркивал благородство.", correct: "ПОЧТЕННЫЙ", hintWord: "ПОЧТИТЕЛЬНЫЙ" },
-    { text: "Адъютант ПОЧТЕННО обратился к генералу.", correct: "ПОЧТИТЕЛЬНО", hintWord: "ПОЧТЕННО" },
-    { text: "Осуществление закупок невозможно без изучения ПОКУПАТЕЛЬНОГО спроса.", correct: "ПОКУПАТЕЛЬСКОГО", hintWord: "ПОКУПАТЕЛЬНОГО" },
-    { text: "Уже сейчас многие предприниматели проявляют далеко не ПРАЗДНИЧНЫЙ интерес к проекту.", correct: "ПРАЗДНЫЙ", hintWord: "ПРАЗДНИЧНЫЙ" },
-    { text: "Глубокого уважения заслуживает ПРОСВЕТИТЕЛЬСКАЯ деятельность актёра.", correct: "ПРОСВЕЩЁННАЯ", hintWord: "ПРОСВЕТИТЕЛЬСКАЯ" },
-    { text: "В ПРОДУКТИВНОЙ корзине жителя должны быть овощи и фрукты.", correct: "ПРОДУКТОВОЙ", hintWord: "ПРОДУКТИВНОЙ" },
-    { text: "За проявленный героизм спасателей ПРЕДОСТАВИЛИ к награде.", correct: "ПРЕДСТАВИЛИ", hintWord: "ПРЕДОСТАВИЛИ" },
-    { text: "В восемь часов начинались занятия: теория чередовалась с ПРАКТИЧНЫМИ.", correct: "ПРАКТИЧЕСКИМИ", hintWord: "ПРАКТИЧНЫМИ" },
-    { text: "В старейшем издательстве вышли два тома ПУБЛИЦИСТИЧНЫХ произведений.", correct: "ПУБЛИЦИСТИЧЕСКИХ", hintWord: "ПУБЛИЦИСТИЧНЫХ" },
-    { text: "Владельцы ПУГАНЫХ домашних животных должны быть бережны.", correct: "ПУГЛИВЫХ", hintWord: "ПУГАНЫХ" },
-    { text: "Изучение поведения животных ПРЕДОСТАВЛЯЕТ огромный научный интерес.", correct: "ПРЕДСТАВЛЯЕТ", hintWord: "ПРЕДОСТАВЛЯЕТ" },
-    { text: "Образ исследователя – ориентир, чтобы стать ПРИЗНАТЕЛЬНЫМ экспертом.", correct: "ПРИЗНАННЫМ", hintWord: "ПРИЗНАТЕЛЬНЫМ" },
-    { text: "Участие столь ПРЕДСТАВИТЕЛЬСКОЙ аудитории обусловлено важностью.", correct: "ПРЕДСТАВИТЕЛЬНОЙ", hintWord: "ПРЕДСТАВИТЕЛЬСКОЙ" },
-    { text: "М.Ю. Лермонтов писал РОМАНТИЧНЫЕ поэмы.", correct: "РОМАНТИЧЕСКИЕ", hintWord: "РОМАНТИЧНЫЕ" },
-    { text: "В СЛОВЕСНОМ составе языка не все элементы подвижны.", correct: "СЛОВАРНОМ", hintWord: "СЛОВЕСНОМ" },
-    { text: "СКРЫТЫЙ человек избегает откровенности.", correct: "СКРЫТНЫЙ", hintWord: "СКРЫТЫЙ" },
-    { text: "Наш отец был СКРЫТЫМ, молчаливым человеком.", correct: "СКРЫТНЫМ", hintWord: "СКРЫТЫМ" },
-    { text: "Весь объём ТЕХНИЧНОГО переоснащения выполнен командой.", correct: "ТЕХНИЧЕСКОГО", hintWord: "ТЕХНИЧНОГО" },
-    { text: "Современные ТЕХНИЧНЫЕ достижения расширили контакты.", correct: "ТЕХНИЧЕСКИЕ", hintWord: "ТЕХНИЧНЫЕ" },
-    { text: "ТЕХНИЧЕСКАЯ спортивная команда станет призёром.", correct: "ТЕХНИЧНАЯ", hintWord: "ТЕХНИЧЕСКАЯ" },
-    { text: "Писатель считает это произведение самым УДАЧЛИВЫМ из написанного.", correct: "УДАЧНЫМ", hintWord: "УДАЧЛИВЫМ" },
-    { text: "ЭКОНОМИЧЕСКИЙ способ литья уменьшил расходы.", correct: "ЭКОНОМИЧНЫЙ", hintWord: "ЭКОНОМИЧЕСКИЙ" },
-    { text: "Следует повышать ЭФФЕКТНОСТЬ производства.", correct: "ЭФФЕКТИВНОСТЬ", hintWord: "ЭФФЕКТНОСТЬ" },
-
-    // ========== НОВЫЕ ПРЕДЛОЖЕНИЯ (дополнительная тренировка) ==========
-    { text: "ТУРИСТСКОЕ агентство предоставляет путёвки по сниженным ценам.", correct: "туристическое", hintWord: "ТУРИСТСКОЕ" },
-    { text: "Многие из нашей школы считали моего одноклассника Артёма очень АРТИСТИЧЕСКИМ юношей.", correct: "артистичным", hintWord: "АРТИСТИЧЕСКИМ" },
-    { text: "Сегодня Анечка была НАДЕТА в белое ситцевое платьице с голубым кружевным воротничком.", correct: "одета", hintWord: "НАДЕТА" },
-    { text: "Когда знания выстроились в ЛОГИЧНУЮ цепочку, оставалось только удивляться.", correct: "логическую", hintWord: "ЛОГИЧНУЮ" },
-    { text: "Некоторые существа могут обретать ЧЕЛОВЕЧНЫЙ облик, при этом вторая ипостась у них довольно большая.", correct: "человеческий", hintWord: "ЧЕЛОВЕЧНЫЙ" },
-    { text: "При ЦАРСТВЕННОМ дворе уже служили иностранцы: доктора, аптекари, окулист, алхимик.", correct: "царском", hintWord: "ЦАРСТВЕННОМ" },
-    { text: "Бригадир подсказал ДЕЛОВУЮ мысль.", correct: "дельную", hintWord: "ДЕЛОВУЮ" },
-    { text: "Человек должен использовать свой человеческий потенциал на пользу максимально ГУМАНИТАРНОГО общества.", correct: "гуманного", hintWord: "ГУМАНИТАРНОГО" },
-    { text: "А на ужин принесли РЫБИЙ суп.", correct: "рыбный", hintWord: "РЫБИЙ" },
-    { text: "НЕВЕЖА также в ослепленье бранит науки и ученье, и все учёные труды.", correct: "невежда", hintWord: "НЕВЕЖА" },
-    { text: "Руководство должно ПРЕДПРИНЯТЬ меры.", correct: "принять", hintWord: "ПРЕДПРИНЯТЬ" },
-    { text: "Я же не знал, что наши мужики-то умнее окажутся и не пойдут на поводу ЗАЧИНАТЕЛЕЙ этой смуты.", correct: "зачинщиков", hintWord: "ЗАЧИНАТЕЛЕЙ" },
-    { text: "Позже оказалось, что это РЫБОЛОВЕЦКИЙ крючок на леске.", correct: "рыболовный", hintWord: "РЫБОЛОВЕЦКИЙ" },
-    { text: "Средства построения ГРАФИЧНЫХ изображений расширились, но их суть осталась неизменной.", correct: "графических", hintWord: "ГРАФИЧНЫХ" },
-    { text: "У меня не было никакого желания пить этот гадкий РЫБНЫЙ жир.", correct: "рыбий", hintWord: "РЫБНЫЙ" },
-    { text: "В одиночестве совершала она свой ЖИТЕЙСКИЙ путь.", correct: "жизненный", hintWord: "ЖИТЕЙСКИЙ" },
-    { text: "Желая проучить грубиянов, утром я тайком проник в их апартаменты и хотел хорошенько напугать НЕВЕЖД.", correct: "невеж", hintWord: "НЕВЕЖД" },
-    { text: "Совершенно нет времени их заводить и нет сил поддерживать ДРУЖЕСТВЕННЫЕ отношения.", correct: "дружеские", hintWord: "ДРУЖЕСТВЕННЫЕ" },
-    { text: "Граф — человек ПОНЯТНЫЙ, быстро схватывающий и легко реагирующий на изменения окружающей среды.", correct: "понятливый", hintWord: "ПОНЯТНЫЙ" },
-    { text: "Вдвоём гораздо безопасней покидать ВРАЖДЕБНУЮ территорию в случае погони.", correct: "вражескую", hintWord: "ВРАЖДЕБНУЮ" },
-    { text: "Арена его предвыборной КОМПАНИИ – это весь земной шар.", correct: "кампании", hintWord: "КОМПАНИИ" },
-    { text: "На завтрак отдыхающие получили недосоленную кашу, но вот обед был довольно СЫТЫМ.", correct: "сытным", hintWord: "СЫТЫМ" },
-    { text: "Вы не размышляете над ЭФФЕКТНЫМ решением вашей проблемы.", correct: "эффективным", hintWord: "ЭФФЕКТНЫМ" },
-    { text: "Определив меня в русский ДРАМАТИЧНЫЙ театр, почти сразу меня начали вводить в разные спектакли.", correct: "драматический", hintWord: "ДРАМАТИЧНЫЙ" }
-].filter(item => item.correct !== item.hintWord);
+    const sentencesDB = [
+        { text: "Королёв оказался блистательным, очень АРТИСТИЧЕСКИМ рассказчиком.", correct: "АРТИСТИЧНЫМ", hintWord: "АРТИСТИЧЕСКИМ" },
+        { text: "По АВТОРИТАРНОМУ мнению Д. Карнеги, улыбка «создаёт счастье в доме»", correct: "АВТОРИТЕТНОМУ", hintWord: "АВТОРИТАРНОМУ" },
+        { text: "С равнины тянуло миндальным запахом БОЛОТИСТЫХ цветов.", correct: "БОЛОТНЫХ", hintWord: "БОЛОТИСТЫХ" },
+        { text: "Это люди БЕЗОТВЕТНЫЕ: они не привыкли отвечать за свои поступки.", correct: "БЕЗОТВЕТСТВЕННЫЕ", hintWord: "БЕЗОТВЕТНЫЕ" },
+        { text: "Кое-где по опушкам БОЛОТНЫЙ запах был очень силён.", correct: "БОЛОТИСТЫЙ", hintWord: "БОЛОТНЫЙ" },
+        { text: "Родители рядового Сидорова получили из воинской части БЛАГОДАРНОЕ письмо.", correct: "БЛАГОДАРСТВЕННОЕ", hintWord: "БЛАГОДАРНОЕ" },
+        { text: "Трудно переоценить БЛАГОТВОРИТЕЛЬНОЕ влияние природы на здоровье", correct: "БЛАГОТВОРНОЕ", hintWord: "БЛАГОТВОРИТЕЛЬНОЕ" },
+        { text: "Кафедральный собор обретает сегодня БЫВАЛОЕ великолепие", correct: "БЫЛОЕ", hintWord: "БЫВАЛОЕ" },
+        { text: "ВЕЛИКИЕ и прекрасные пеликаны медленно взмахивали крыльями", correct: "ВЕЛИЧЕСТВЕННЫЕ", hintWord: "ВЕЛИКИЕ" },
+        { text: "ВЕЧНАЯ пыль покрывала всю мебель", correct: "ВЕКОВАЯ", hintWord: "ВЕЧНАЯ" },
+        { text: "В комнату вошла красивая женщина с ВЕЛИКОЙ осанкой.", correct: "ВЕЛИЧЕСТВЕННОЙ", hintWord: "ВЕЛИКОЙ" },
+        { text: "Густые заросли кустарника чередовались с ВЕЧНЫМИ соснами.", correct: "ВЕКОВЫМИ", hintWord: "ВЕЧНЫМИ" },
+        { text: "На этом небольшом предприятии коллектив ЗАПОЛНИЛСЯ новыми кадрами.", correct: "ПОПОЛНИЛСЯ", hintWord: "ЗАПОЛНИЛСЯ" },
+        { text: "Правильное понимание трендов позволит получить финансовую ВЫГОДНОСТЬ", correct: "ВЫГОДУ", hintWord: "ВЫГОДНОСТЬ" },
+        { text: "Самым ВЫСОТНЫМ игроком чемпионата признан игрок российской команды.", correct: "ВЫСОКИМ", hintWord: "ВЫСОТНЫМ" },
+        { text: "Стремление компании ВЫРАСТИТЬ объёмы производства требует внимания", correct: "НАРАСТИТЬ", hintWord: "ВЫРАСТИТЬ" },
+        { text: "Оба берега реки были высоки и обрывисты, можно было видеть ГЛИНЯНОЙ почвы.", correct: "ГЛИНИСТОЙ", hintWord: "ГЛИНЯНОЙ" },
+        { text: "В представлении Татьяны каждый ГОДОВОЙ ребёнок был уже сознательным.", correct: "ГОДОВАЛЫЙ", hintWord: "ГОДОВОЙ" },
+        { text: "Положительный настрой, ГАРАНТИЙНАЯ ситуация успеха пробуждает добрые чувства.", correct: "ГАРАНТИРОВАННАЯ", hintWord: "ГАРАНТИЙНАЯ" },
+        { text: "В музее портреты учёных, являющих собой ГОРДЫНЮ мировой науки.", correct: "ГОРДОСТЬ", hintWord: "ГОРДЫНЮ" },
+        { text: "Между странами установились доверительные и ДРУЖЕСКИЕ отношения.", correct: "ДРУЖЕСТВЕННЫЕ", hintWord: "ДРУЖЕСКИЕ" },
+        { text: "На тёмной листве блестели ДОЖДЛИВЫЕ капли.", correct: "ДОЖДЕВЫЕ", hintWord: "ДОЖДЛИВЫЕ" },
+        { text: "Шоколад приносит ДВОЙСТВЕННУЮ пользу.", correct: "ДВОЙНУЮ", hintWord: "ДВОЙСТВЕННУЮ" },
+        { text: "Она не услышала ЖЕЛАТЕЛЬНЫХ слов от друга.", correct: "ЖЕЛАННЫХ", hintWord: "ЖЕЛАТЕЛЬНЫХ" },
+        { text: "На всю жизнь я запомнил ЖЕСТОКОЕ правило машиниста.", correct: "ЖЁСТКОЕ", hintWord: "ЖЕСТОКОЕ" },
+        { text: "Директор ЗВУКОВЫМ голосом объявил победителей.", correct: "ЗВУЧНЫМ", hintWord: "ЗВУКОВЫМ" },
+        { text: "Иван Парфеньевич Бородин – ЗАЧИНЩИК российского природоохранного движения.", correct: "ЗАЧИНАТЕЛЬ", hintWord: "ЗАЧИНЩИК" },
+        { text: "Участие известного спортсмена вызвало значительный ЗРИТЕЛЬНЫЙ интерес.", correct: "ЗРИТЕЛЬСКИЙ", hintWord: "ЗРИТЕЛЬНЫЙ" },
+        { text: "Трудно было сказать: природная речка или ИСКУСНЫЙ канал.", correct: "ИСКУССТВЕННЫЙ", hintWord: "ИСКУСНЫЙ" },
+        { text: "Цель программы – расширить возможности ИЗОБРЕТАТЕЛЬНОЙ деятельности.", correct: "ИЗОБРЕТАТЕЛЬСКОЙ", hintWord: "ИЗОБРЕТАТЕЛЬНОЙ" },
+        { text: "Глава города отметил их ИСПОЛНИТЕЛЬНОЕ мастерство.", correct: "ИСПОЛНИТЕЛЬСКОЕ", hintWord: "ИСПОЛНИТЕЛЬНОЕ" },
+        { text: "Участники парада заняли ИСХОДЯЩИЕ позиции.", correct: "ИСХОДНЫЕ", hintWord: "ИСХОДЯЩИЕ" },
+        { text: "А внизу раздаётся мерный топот КОННЫХ копыт.", correct: "КОНСКИХ", hintWord: "КОННЫХ" },
+        { text: "Без меди клетки не могут образовывать КРАСОЧНОЕ вещество – меланин.", correct: "КРАСЯЩЕЕ", hintWord: "КРАСОЧНОЕ" },
+        { text: "Вокруг расстилалась КАМЕННАЯ пустыня.", correct: "КАМЕНИСТАЯ", hintWord: "КАМЕННАЯ" },
+        { text: "Современные МОРОЗНЫЕ камеры позволяют замораживать продукты.", correct: "МОРОЗИЛЬНЫЕ", hintWord: "МОРОЗНЫЕ" },
+        { text: "Перед тем как ОДЕТЬ линзу, убедитесь в чистоте.", correct: "НАДЕТЬ", hintWord: "ОДЕТЬ" },
+        { text: "В основе народных бунтов лежит несправедливость, которая становится НЕТЕРПИМОЙ болью.", correct: "НЕСТЕРПИМОЙ", hintWord: "НЕТЕРПИМОЙ" },
+        { text: "Мой одноклассник ОДЕЛ костюм Деда Мороза.", correct: "НАДЕЛ", hintWord: "ОДЕЛ" },
+        { text: "Из ОБВИНИТЕЛЬНОГО акта было ясно...", correct: "ОБВИНИТЕЛЬНОГО", hintWord: "ОБВИНИТЕЛЬНОГО" },
+        { text: "ПАМЯТЛИВЫЕ места нашего города привлекают туристов.", correct: "ПАМЯТНЫЕ", hintWord: "ПАМЯТЛИВЫЕ" },
+        { text: "ПОЧТИТЕЛЬНЫЙ возраст в сочетании с сединой подчёркивал благородство.", correct: "ПОЧТЕННЫЙ", hintWord: "ПОЧТИТЕЛЬНЫЙ" },
+        { text: "Адъютант ПОЧТЕННО обратился к генералу.", correct: "ПОЧТИТЕЛЬНО", hintWord: "ПОЧТЕННО" },
+        { text: "Осуществление закупок невозможно без изучения ПОКУПАТЕЛЬНОГО спроса.", correct: "ПОКУПАТЕЛЬСКОГО", hintWord: "ПОКУПАТЕЛЬНОГО" },
+        { text: "Уже сейчас многие предприниматели проявляют далеко не ПРАЗДНИЧНЫЙ интерес к проекту.", correct: "ПРАЗДНЫЙ", hintWord: "ПРАЗДНИЧНЫЙ" },
+        { text: "Глубокого уважения заслуживает ПРОСВЕТИТЕЛЬСКАЯ деятельность актёра.", correct: "ПРОСВЕЩЁННАЯ", hintWord: "ПРОСВЕТИТЕЛЬСКАЯ" },
+        { text: "В ПРОДУКТИВНОЙ корзине жителя должны быть овощи и фрукты.", correct: "ПРОДУКТОВОЙ", hintWord: "ПРОДУКТИВНОЙ" },
+        { text: "За проявленный героизм спасателей ПРЕДОСТАВИЛИ к награде.", correct: "ПРЕДСТАВИЛИ", hintWord: "ПРЕДОСТАВИЛИ" },
+        { text: "В восемь часов начинались занятия: теория чередовалась с ПРАКТИЧНЫМИ.", correct: "ПРАКТИЧЕСКИМИ", hintWord: "ПРАКТИЧНЫМИ" },
+        { text: "В старейшем издательстве вышли два тома ПУБЛИЦИСТИЧНЫХ произведений.", correct: "ПУБЛИЦИСТИЧЕСКИХ", hintWord: "ПУБЛИЦИСТИЧНЫХ" },
+        { text: "Владельцы ПУГАНЫХ домашних животных должны быть бережны.", correct: "ПУГЛИВЫХ", hintWord: "ПУГАНЫХ" },
+        { text: "Изучение поведения животных ПРЕДОСТАВЛЯЕТ огромный научный интерес.", correct: "ПРЕДСТАВЛЯЕТ", hintWord: "ПРЕДОСТАВЛЯЕТ" },
+        { text: "Образ исследователя – ориентир, чтобы стать ПРИЗНАТЕЛЬНЫМ экспертом.", correct: "ПРИЗНАННЫМ", hintWord: "ПРИЗНАТЕЛЬНЫМ" },
+        { text: "Участие столь ПРЕДСТАВИТЕЛЬСКОЙ аудитории обусловлено важностью.", correct: "ПРЕДСТАВИТЕЛЬНОЙ", hintWord: "ПРЕДСТАВИТЕЛЬСКОЙ" },
+        { text: "М.Ю. Лермонтов писал РОМАНТИЧНЫЕ поэмы.", correct: "РОМАНТИЧЕСКИЕ", hintWord: "РОМАНТИЧНЫЕ" },
+        { text: "В СЛОВЕСНОМ составе языка не все элементы подвижны.", correct: "СЛОВАРНОМ", hintWord: "СЛОВЕСНОМ" },
+        { text: "СКРЫТЫЙ человек избегает откровенности.", correct: "СКРЫТНЫЙ", hintWord: "СКРЫТЫЙ" },
+        { text: "Наш отец был СКРЫТЫМ, молчаливым человеком.", correct: "СКРЫТНЫМ", hintWord: "СКРЫТЫМ" },
+        { text: "Весь объём ТЕХНИЧНОГО переоснащения выполнен командой.", correct: "ТЕХНИЧЕСКОГО", hintWord: "ТЕХНИЧНОГО" },
+        { text: "Современные ТЕХНИЧНЫЕ достижения расширили контакты.", correct: "ТЕХНИЧЕСКИЕ", hintWord: "ТЕХНИЧНЫЕ" },
+        { text: "ТЕХНИЧЕСКАЯ спортивная команда станет призёром.", correct: "ТЕХНИЧНАЯ", hintWord: "ТЕХНИЧЕСКАЯ" },
+        { text: "Писатель считает это произведение самым УДАЧЛИВЫМ из написанного.", correct: "УДАЧНЫМ", hintWord: "УДАЧЛИВЫМ" },
+        { text: "ЭКОНОМИЧЕСКИЙ способ литья уменьшил расходы.", correct: "ЭКОНОМИЧНЫЙ", hintWord: "ЭКОНОМИЧЕСКИЙ" },
+        { text: "Следует повышать ЭФФЕКТНОСТЬ производства.", correct: "ЭФФЕКТИВНОСТЬ", hintWord: "ЭФФЕКТНОСТЬ" },
+        // Дополнительная тренировка (новые предложения)
+        { text: "ТУРИСТСКОЕ агентство предоставляет путёвки по сниженным ценам.", correct: "туристическое", hintWord: "ТУРИСТСКОЕ" },
+        { text: "Многие из нашей школы считали моего одноклассника Артёма очень АРТИСТИЧЕСКИМ юношей.", correct: "артистичным", hintWord: "АРТИСТИЧЕСКИМ" },
+        { text: "Сегодня Анечка была НАДЕТА в белое ситцевое платьице с голубым кружевным воротничком.", correct: "одета", hintWord: "НАДЕТА" },
+        { text: "Когда знания выстроились в ЛОГИЧНУЮ цепочку, оставалось только удивляться.", correct: "логическую", hintWord: "ЛОГИЧНУЮ" },
+        { text: "Некоторые существа могут обретать ЧЕЛОВЕЧНЫЙ облик, при этом вторая ипостась у них довольно большая.", correct: "человеческий", hintWord: "ЧЕЛОВЕЧНЫЙ" },
+        { text: "При ЦАРСТВЕННОМ дворе уже служили иностранцы: доктора, аптекари, окулист, алхимик.", correct: "царском", hintWord: "ЦАРСТВЕННОМ" },
+        { text: "Бригадир подсказал ДЕЛОВУЮ мысль.", correct: "дельную", hintWord: "ДЕЛОВУЮ" },
+        { text: "Человек должен использовать свой человеческий потенциал на пользу максимально ГУМАНИТАРНОГО общества.", correct: "гуманного", hintWord: "ГУМАНИТАРНОГО" },
+        { text: "А на ужин принесли РЫБИЙ суп.", correct: "рыбный", hintWord: "РЫБИЙ" },
+        { text: "НЕВЕЖА также в ослепленье бранит науки и ученье, и все учёные труды.", correct: "невежда", hintWord: "НЕВЕЖА" },
+        { text: "Руководство должно ПРЕДПРИНЯТЬ меры.", correct: "принять", hintWord: "ПРЕДПРИНЯТЬ" },
+        { text: "Я же не знал, что наши мужики-то умнее окажутся и не пойдут на поводу ЗАЧИНАТЕЛЕЙ этой смуты.", correct: "зачинщиков", hintWord: "ЗАЧИНАТЕЛЕЙ" },
+        { text: "Позже оказалось, что это РЫБОЛОВЕЦКИЙ крючок на леске.", correct: "рыболовный", hintWord: "РЫБОЛОВЕЦКИЙ" },
+        { text: "Средства построения ГРАФИЧНЫХ изображений расширились, но их суть осталась неизменной.", correct: "графических", hintWord: "ГРАФИЧНЫХ" },
+        { text: "У меня не было никакого желания пить этот гадкий РЫБНЫЙ жир.", correct: "рыбий", hintWord: "РЫБНЫЙ" },
+        { text: "В одиночестве совершала она свой ЖИТЕЙСКИЙ путь.", correct: "жизненный", hintWord: "ЖИТЕЙСКИЙ" },
+        { text: "Желая проучить грубиянов, утром я тайком проник в их апартаменты и хотел хорошенько напугать НЕВЕЖД.", correct: "невеж", hintWord: "НЕВЕЖД" },
+        { text: "Совершенно нет времени их заводить и нет сил поддерживать ДРУЖЕСТВЕННЫЕ отношения.", correct: "дружеские", hintWord: "ДРУЖЕСТВЕННЫЕ" },
+        { text: "Граф — человек ПОНЯТНЫЙ, быстро схватывающий и легко реагирующий на изменения окружающей среды.", correct: "понятливый", hintWord: "ПОНЯТНЫЙ" },
+        { text: "Вдвоём гораздо безопасней покидать ВРАЖДЕБНУЮ территорию в случае погони.", correct: "вражескую", hintWord: "ВРАЖДЕБНУЮ" },
+        { text: "Арена его предвыборной КОМПАНИИ – это весь земной шар.", correct: "кампании", hintWord: "КОМПАНИИ" },
+        { text: "На завтрак отдыхающие получили недосоленную кашу, но вот обед был довольно СЫТЫМ.", correct: "сытным", hintWord: "СЫТЫМ" },
+        { text: "Вы не размышляете над ЭФФЕКТНЫМ решением вашей проблемы.", correct: "эффективным", hintWord: "ЭФФЕКТНЫМ" },
+        { text: "Определив меня в русский ДРАМАТИЧНЫЙ театр, почти сразу меня начали вводить в разные спектакли.", correct: "драматический", hintWord: "ДРАМАТИЧНЫЙ" }
+    ].filter(item => item.correct !== item.hintWord);
 
     // --------------------------------------------------------------
-    // Логика работы (режимы, счёт, словарь) – полностью рабочая
+    // 3. ЛОГИКА РАБОТЫ (с поддержкой нескольких правильных ответов)
     // --------------------------------------------------------------
     let currentMode = "pairs";
-    let currentQuestion = null;
     let currentScore = 0;
     let currentAnswered = false;
-    let currentCorrectAnswer = "";
+    let currentCorrectAnswersList = [];   // массив допустимых ответов для текущего вопроса
     let currentPairObj = null;
     let difficultWords = JSON.parse(localStorage.getItem("difficultParonyms")) || [];
 
@@ -396,19 +244,57 @@ const sentencesDB = [
         const fb = document.getElementById("dynamicFeedback");
         if (fb) { fb.className = `feedback ${type}`; fb.innerHTML = msg; }
     }
+
+    // Генерация вопроса для режима ПАРЫ (с учётом всех возможных ответов)
     function generatePairQuestion() {
-        const randomPair = paronymPairsList[Math.floor(Math.random() * paronymPairsList.length)];
-        const side = Math.random() < 0.5 ? "left" : "right";
-        let promptWord, correctPartner;
-        if (side === "left") { promptWord = randomPair.word1; correctPartner = randomPair.word2; }
-        else { promptWord = randomPair.word2; correctPartner = randomPair.word1; }
-        currentPairObj = { prompt: promptWord, correct: correctPartner };
-        currentCorrectAnswer = correctPartner;
+        const allWords = new Set();
+        paronymPairsList.forEach(pair => {
+            allWords.add(pair.word1);
+            allWords.add(pair.word2);
+        });
+        const wordsArray = Array.from(allWords);
+        const randomWord = wordsArray[Math.floor(Math.random() * wordsArray.length)];
+        
+        const possibleAnswers = new Set();
+        paronymPairsList.forEach(pair => {
+            if (pair.word1 === randomWord) possibleAnswers.add(pair.word2);
+            if (pair.word2 === randomWord) possibleAnswers.add(pair.word1);
+        });
+        
+        const correctList = Array.from(possibleAnswers);
+        if (correctList.length === 0) return generatePairQuestion(); // fallback
+        
+        currentPairObj = {
+            prompt: randomWord,
+            correctAnswers: correctList
+        };
+        currentCorrectAnswersList = correctList;
         currentAnswered = false;
-        return { promptWord, correctPartner };
+        return { promptWord: randomWord, correctList };
     }
+
+    function checkPairAnswer(userAnswer) {
+        if (!userAnswer) { showFeedback("Введите ответ!", "wrong"); return; }
+        const normalize = s => s.trim().toLowerCase().replace(/[.,!?;:()]/g, '');
+        const normalizedUser = normalize(userAnswer);
+        const isCorrect = currentPairObj.correctAnswers.some(correct => normalize(correct) === normalizedUser);
+        
+        if (isCorrect) {
+            if (!currentAnswered) {
+                currentScore++;
+                updateScoreUI();
+                currentAnswered = true;
+                showFeedback(`✅ Верно! +1 балл. (Подходят: ${currentPairObj.correctAnswers.join(", ")})`, "correct");
+            } else {
+                showFeedback(`🎉 Уже верно! Балл получен.`, "correct");
+            }
+        } else {
+            showFeedback(`❌ Неправильно. Правильные варианты: ${currentPairObj.correctAnswers.join(", ")}.`, "wrong");
+        }
+    }
+
     function renderPairsMode() {
-        const { promptWord, correctPartner } = generatePairQuestion();
+        const { promptWord, correctList } = generatePairQuestion();
         const html = `
             <div class="question-area">
                 <div class="word-prompt">❓ ${promptWord}</div>
@@ -424,18 +310,16 @@ const sentencesDB = [
         dynamicDiv.innerHTML = html;
         document.getElementById("checkBtn").onclick = () => {
             const ans = document.getElementById("answerInput").value.trim();
-            const norm = s => s.toLowerCase().replace(/[.,!?;:()]/g, '');
-            if (norm(ans) === norm(currentCorrectAnswer)) {
-                if (!currentAnswered) { currentScore++; updateScoreUI(); currentAnswered=true; showFeedback(`✅ Верно! +1 балл.`, "correct"); }
-                else showFeedback(`🎉 Уже верно!`, "correct");
-            } else showFeedback(`❌ Неправильно. Правильный ответ: «${currentCorrectAnswer}».`, "wrong");
+            checkPairAnswer(ans);
         };
         document.getElementById("nextBtn").onclick = () => renderPairsMode();
         document.getElementById("difficultWordBtn").onclick = () => addToDifficult(currentPairObj.prompt);
     }
+
+    // Режим предложений (без изменений, работает корректно)
     function renderSentencesMode() {
         const randomSent = sentencesDB[Math.floor(Math.random() * sentencesDB.length)];
-        currentCorrectAnswer = randomSent.correct;
+        currentCorrectAnswersList = [randomSent.correct];
         currentAnswered = false;
         let displayText = randomSent.text;
         const wrongWord = randomSent.hintWord;
@@ -457,13 +341,18 @@ const sentencesDB = [
         document.getElementById("checkSentBtn").onclick = () => {
             const ans = document.getElementById("sentenceAnswer").value.trim();
             const norm = s => s.toLowerCase().replace(/[.,!?;:()]/g, '');
-            if (norm(ans) === norm(currentCorrectAnswer)) {
-                if (!currentAnswered) { currentScore++; updateScoreUI(); currentAnswered=true; showFeedback(`✅ Абсолютно верно! +1 балл.`, "correct"); }
-                else showFeedback(`Уже засчитано.`, "correct");
-            } else showFeedback(`❌ Ошибка! Правильный ответ: «${currentCorrectAnswer}».`, "wrong");
+            if (norm(ans) === norm(randomSent.correct)) {
+                if (!currentAnswered) {
+                    currentScore++;
+                    updateScoreUI();
+                    currentAnswered = true;
+                    showFeedback(`✅ Абсолютно верно! +1 балл.`, "correct");
+                } else showFeedback(`Уже засчитано.`, "correct");
+            } else showFeedback(`❌ Ошибка! Правильный ответ: «${randomSent.correct}».`, "wrong");
         };
         document.getElementById("nextSentBtn").onclick = () => renderSentencesMode();
     }
+
     function setMode(mode) {
         currentMode = mode;
         document.querySelectorAll(".mode-btn").forEach(btn => {
@@ -473,6 +362,7 @@ const sentencesDB = [
         if (mode === "pairs") renderPairsMode();
         else renderSentencesMode();
     }
+
     resetScoreBtn.onclick = () => { currentScore = 0; updateScoreUI(); showFeedback("Счёт обнулён", "neutral"); };
     clearDifficultBtn.onclick = () => { difficultWords = []; saveDifficult(); showFeedback("Словарь очищен", "neutral"); };
     document.querySelectorAll(".mode-btn").forEach(btn => btn.onclick = () => setMode(btn.dataset.mode));
